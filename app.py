@@ -90,7 +90,7 @@ with st.form("prediction_form"):
     col1, col2 = st.columns(2)
 
     with col1:
-        gender = st.selectbox("Gender", ["Male", "Female", "Other"])
+        gender = st.selectbox("Gender", ["Male", "Female"])
         age = st.slider("Age", min_value=1, max_value=120, value=30)
         hypertension = st.selectbox("Hypertension", ["No", "Yes"])
         heart_disease = st.selectbox("Heart Disease", ["No", "Yes"])
