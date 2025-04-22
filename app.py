@@ -3,6 +3,69 @@ import pandas as pd
 import pickle
 from PIL import Image
 
+# Function to reorder DataFrame columns
+def order_data(df):
+    desired_order = ['gender', 'ever_married', 'work_type', 'Residence_type', 'smoking_status', 'age', 'hypertension', 'heart_disease', 'avg_glucose_level', 'bmi']
+    # Reorder the DataFrame columns
+    decoded = df[desired_order]
+    return decoded
+
+# Function to encode the raw input data
+def custom_encode(raw_input):
+    # Encoding for 'gender'
+    if raw_input['gender'] == 'Female':
+        raw_input['gender'] = 0
+    elif raw_input['gender'] == 'Male':
+        raw_input['gender'] = 1
+    else:
+        raise ValueError("Invalid gender value")
+
+    # Encoding for 'ever_married'
+    if raw_input['ever_married'] == 'No':
+        raw_input['ever_married'] = 0
+    elif raw_input['ever_married'] == 'Yes':
+        raw_input['ever_married'] = 1
+    else:
+        raise ValueError("Invalid ever_married value")
+
+    # Encoding for 'work_type'
+    if raw_input['work_type'] == 'Govt_job':
+        raw_input['work_type'] = 0
+    elif raw_input['work_type'] == 'Private':
+        raw_input['work_type'] = 1
+    elif raw_input['work_type'] == 'Self-employed':
+        raw_input['work_type'] = 2
+    elif raw_input['work_type'] == 'children':
+        raw_input['work_type'] = 3
+    else:
+        raise ValueError("Invalid work_type value")
+
+    # Encoding for 'Residence_type'
+    if raw_input['Residence_type'] == 'Rural':
+        raw_input['Residence_type'] = 0
+    elif raw_input['Residence_type'] == 'Urban':
+        raw_input['Residence_type'] = 1
+    else:
+        raise ValueError("Invalid Residence_type value")
+
+    # Encoding for 'smoking_status'
+    if raw_input['smoking_status'] == 'Unknown':
+        raw_input['smoking_status'] = 0
+    elif raw_input['smoking_status'] == 'formerly smoked':
+        raw_input['smoking_status'] = 1
+    elif raw_input['smoking_status'] == 'never smoked':
+        raw_input['smoking_status'] = 2
+    elif raw_input['smoking_status'] == 'smokes':
+        raw_input['smoking_status'] = 3
+    else:
+        raise ValueError("Invalid smoking_status value")
+
+    # Encoding for 'hypertension' and 'heart_disease' (same as before)
+    raw_input['hypertension'] = 1 if raw_input['hypertension'] == "Yes" else 0
+    raw_input['heart_disease'] = 1 if raw_input['heart_disease'] == "Yes" else 0
+
+    return raw_input
+
 # Page config
 st.set_page_config(page_title="Stroke Risk Predictor", page_icon="🧠", layout="centered")
 
@@ -44,11 +107,12 @@ with st.form("prediction_form"):
 
 # Map and prepare data
 def prepare_input():
-    return pd.DataFrame([{
+    # Prepare the data from form inputs
+    input_data = pd.DataFrame([{
         'gender': gender,
         'age': age,
-        'hypertension': 1 if hypertension == "Yes" else 0,
-        'heart_disease': 1 if heart_disease == "Yes" else 0,
+        'hypertension': hypertension,
+        'heart_disease': heart_disease,
         'ever_married': ever_married,
         'work_type': work_type,
         'Residence_type': residence_type,
@@ -57,9 +121,21 @@ def prepare_input():
         'smoking_status': smoking_status
     }])
 
+    # Encode the raw input data
+    input_data = custom_encode(input_data.iloc[0].to_dict())
+
+    # Convert back to DataFrame
+    input_data_df = pd.DataFrame([input_data])
+
+    # Reorder columns to match model's expected input
+    input_data_df = order_data(input_data_df)
+    return input_data_df
+
 # Prediction logic
 if submit_button:
     input_df = prepare_input()
+    
+    # Make the prediction
     prediction = model.predict(input_df)[0]
 
     st.markdown("---")
@@ -74,4 +150,3 @@ if submit_button:
 
 # Footer
 st.markdown("---")
-
