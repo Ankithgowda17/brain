@@ -70,7 +70,7 @@ def custom_encode(raw_input):
 st.set_page_config(page_title="Stroke Risk Predictor", page_icon="🧠", layout="centered")
 
 # Load model
-with open("rfcl.pickle", "rb") as file:
+with open("rfclnew.pickle", "rb") as file:
     model = pickle.load(file)
 
 # App header
