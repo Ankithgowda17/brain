@@ -7,7 +7,7 @@ from PIL import Image
 st.set_page_config(page_title="Stroke Risk Predictor", page_icon="🧠", layout="centered")
 
 # Load model
-with open("finalized_model.pkl", "rb") as file:
+with open("finalized_model.pickle", "rb") as file:
     model = pickle.load(file)
 
 # App header
