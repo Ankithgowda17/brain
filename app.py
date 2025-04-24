@@ -97,7 +97,7 @@ with st.form("prediction_form"):
         ever_married = st.selectbox("Ever Married", ["No", "Yes"])
 
     with col2:
-        work_type = st.selectbox("Work Type", ["Private", "Self-employed", "Govt_job", "children"])
+        work_type = st.selectbox("Work Type", ["Private", "Self-employed", "Govt_job"])
         residence_type = st.selectbox("Residence Type", ["Urban", "Rural"])
         avg_glucose_level = st.number_input("Average Glucose Level", min_value=0.0, value=100.0)
         bmi = st.number_input("BMI", min_value=0.0, value=22.0)
